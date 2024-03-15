@@ -1,6 +1,5 @@
 import "./styles.css";
 import { useContext, useState } from "react";
-import { CredentialsDTO } from "../../../models/auth";
 import * as authService from "../../../services/auth-service";
 import { useNavigate } from "react-router-dom";
 import { ContextToken } from "../../../utils/context-token";
