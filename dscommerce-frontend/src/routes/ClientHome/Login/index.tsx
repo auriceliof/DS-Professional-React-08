@@ -54,22 +54,16 @@ export default function Login() {
             <div className="dsc-form-controls-container">
               <div>
                 <input
-                  name="username"
-                  value={formData.username.value}
+                  { ...formData.username }
                   className="dsc-form-control"
-                  type="text"
-                  placeholder="Email"
                   onChange={handleInputChange}
                 />
                 <div className="dsc-form-error"></div>
               </div>
               <div>
                 <input
-                  name="password"
-                  value={formData.password.value}
+                  { ...formData.password }
                   className="dsc-form-control"
-                  type="password"
-                  placeholder="Senha"
                   onChange={handleInputChange}
                 />
               </div>
