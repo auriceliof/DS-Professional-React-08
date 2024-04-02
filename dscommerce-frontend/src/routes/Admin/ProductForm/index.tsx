@@ -4,11 +4,16 @@ import { useEffect, useState } from 'react';
 import FormInput from '../../../components/FormInput';
 import * as forms from '../../../utils/forms'
 import * as productService from '../../../services/product-service';
+import * as categoryService from '../../../services/category-service';
 import FormTextArea from '../../../components/FormTextArea';
+import ReactSelect from 'react-select';
+import { CategoryDTO } from '../../../models/category';
 
 export default function ProductForm() {
 
     const params = useParams();
+
+    const [categories, setCategories] = useState<CategoryDTO[]>([]);
 
     const isEditing = params.productId !== 'create'
 
@@ -55,7 +60,14 @@ export default function ProductForm() {
           },
     });
 
-      useEffect(() => {
+    useEffect(() => {
+        categoryService.findAllRequest()
+        .then((response) => {
+            setCategories(response.data);
+        })
+    });
+        
+    useEffect(() => {
 
         if (isEditing) {
             productService.findById(Number(params.productId))
@@ -64,7 +76,7 @@ export default function ProductForm() {
                     setFormData(newFormData);
                 });
         }
-      }, [])
+    }, []);
 
       function handleInputChange(event: any) {
         setFormData(forms.updateAndValidate(formData, event.target.name, event.target.value));
@@ -73,6 +85,12 @@ export default function ProductForm() {
       function handleTurnDirty(name: string) {
         setFormData(forms.dirtyAndValidate(formData, name));
       }
+
+      const options = [
+        { value: 'chocolate', label: 'Chocolate' },
+        { value: 'strawberry', label: 'Strawberry' },
+        { value: 'vanilla', label: 'Vanilla' }
+      ]
 
     return (
         <main>
@@ -105,6 +123,14 @@ export default function ProductForm() {
                                 className="dsc-form-control"
                                 onTurnDirty={handleTurnDirty}
                                 onChange={handleInputChange}
+                            />
+                        </div>
+                        <div>
+                            <ReactSelect 
+                                options={categories} 
+                                isMulti
+                                getOptionLabel={(obj) => obj.name}
+                                getOptionValue={(obj) => String(obj.id)}
                             />
                         </div>
                         <div>
