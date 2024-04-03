@@ -1,13 +1,13 @@
 import './styles.css';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { CategoryDTO } from '../../../models/category';
 import FormInput from '../../../components/FormInput';
 import * as forms from '../../../utils/forms'
 import * as productService from '../../../services/product-service';
 import * as categoryService from '../../../services/category-service';
 import FormTextArea from '../../../components/FormTextArea';
-import ReactSelect from 'react-select';
-import { CategoryDTO } from '../../../models/category';
+import FormSelect from '../../../components/FormSelect';
 
 export default function ProductForm() {
 
@@ -58,6 +58,16 @@ export default function ProductForm() {
             },
             message: "a descrição deve ter no mínimo 10 caracteres"
           },
+        categories: {
+            value: [],
+            id: "categories",
+            name: "categories",
+            placceholder: "Categorias",
+            validation: function(value: CategoryDTO[]) {
+                return value.length > 0;
+            },
+            message: "Escolha ao menos uma categoria"
+        }  
     });
 
     useEffect(() => {
@@ -85,12 +95,6 @@ export default function ProductForm() {
       function handleTurnDirty(name: string) {
         setFormData(forms.dirtyAndValidate(formData, name));
       }
-
-      const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-      ]
 
     return (
         <main>
@@ -126,11 +130,17 @@ export default function ProductForm() {
                             />
                         </div>
                         <div>
-                            <ReactSelect 
+                            <FormSelect
+                                {...formData.categories} 
                                 options={categories} 
+                                onChange={(obj: any) => {
+                                    const newFormData = forms.updateAndValidate(formData, "categories", obj);
+                                    setFormData(newFormData);
+                                }}
+                                onTurnDirty={handleTurnDirty}
                                 isMulti
-                                getOptionLabel={(obj) => obj.name}
-                                getOptionValue={(obj) => String(obj.id)}
+                                getOptionLabel={(obj: any) => obj.name}
+                                getOptionValue={(obj: any) => String(obj.id)}
                             />
                         </div>
                         <div>
