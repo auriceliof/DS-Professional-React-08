@@ -89,19 +89,25 @@ export default function ProductForm() {
         }
     }, []);
 
-      function handleInputChange(event: any) {
-        setFormData(forms.updateAndValidate(formData, event.target.name, event.target.value));
-      }
+    function handleInputChange(event: any) {
+    setFormData(forms.updateAndValidate(formData, event.target.name, event.target.value));
+    }
 
-      function handleTurnDirty(name: string) {
-        setFormData(forms.dirtyAndValidate(formData, name));
-      }
+    function handleTurnDirty(name: string) {
+    setFormData(forms.dirtyAndValidate(formData, name));
+    }
+
+    function handleSubmit(event: any) {
+        event.preventDefault();
+
+        console.log(forms.toValues(formData));
+    }
 
     return (
         <main>
             <section id="product-form-section" className="dsc-container">
                 <div className="dsc-product-form-container">
-                <form className="dsc-card dsc-form">
+                <form className="dsc-card dsc-form" onSubmit={handleSubmit}>
                     <h2>Dados do produto</h2>
                     <div className="dsc-form-controls-container">
                         <div>
@@ -138,7 +144,6 @@ export default function ProductForm() {
                                 options={categories} 
                                 onChange={(obj: any) => {
                                     const newFormData = forms.updateAndValidate(formData, "categories", obj);
-                                    console.log(newFormData.categories)
                                     setFormData(newFormData);
                                 }}
                                 onTurnDirty={handleTurnDirty}
